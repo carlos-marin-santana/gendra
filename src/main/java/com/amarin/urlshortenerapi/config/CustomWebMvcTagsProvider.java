@@ -11,7 +11,11 @@ import java.util.Map;
 
 public class CustomWebMvcTagsProvider extends DefaultWebMvcTagsProvider {
     public Iterable<Tag> getTags(HttpServletRequest request, HttpServletResponse response, Object handler, Throwable exception) {
-        return Tags.of(super.getTags(request, response, handler, exception)).and(getShortUrlTag(request));
+
+        if(request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE) != null){
+            return Tags.of(super.getTags(request, response, handler, exception)) .and(getShortUrlTag(request));
+        }
+        return Tags.of(super.getTags(request, response, handler, exception)).and(Tag.of("shortUrl", "na"));
     }
 
     private Tag getShortUrlTag(HttpServletRequest request) {
